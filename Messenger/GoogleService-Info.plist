@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>692944719650-1dr1miiqimkjcodhn2gfn4d6csks3bj8.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.692944719650-1dr1miiqimkjcodhn2gfn4d6csks3bj8</string>
+	<key>API_KEY</key>
+	<string>AIzaSyC9jZwIYmxf4__6pfkB80LbkYMfaSLCAJo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>692944719650</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ioseit.Messenger</string>
+	<key>PROJECT_ID</key>
+	<string>messenger-63455</string>
+	<key>STORAGE_BUCKET</key>
+	<string>messenger-63455.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:692944719650:ios:44bd2ba59b5329dc85df7b</string>
+	<key>DATABASE_URL</key>
+	<string>https://messenger-63455.firebaseio.com</string>
+</dict>
+</plist>
