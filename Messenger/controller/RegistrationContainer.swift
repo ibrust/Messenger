@@ -28,6 +28,9 @@ class RegistrationContainer: UIViewController {
         guard let last_name = last_name_outlet.text else{return}
         guard let email_address = email_outlet.text else{return}
         guard let password = password_outlet.text else{return}
+        if is_valid_email(email_address) == false{return}
+        if is_valid_password(password) == false{return}
+        
         Auth.auth().createUser(withEmail: email_address, password: password) { authResult, error in
             if let error = error as? NSError {
                 switch AuthErrorCode(rawValue: error.code){
@@ -42,22 +45,26 @@ class RegistrationContainer: UIViewController {
                 }
             } else {
                 let new_user_info = Auth.auth().currentUser
-                let stored_email = new_user_info?.email 
+                let stored_email = new_user_info?.email
+                
+                // put some code to actually create a user database object here 
+                
             }
         }
+        
+        
+        
+        
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
     }
     
 
     /*
-    // MARK: - Navigation
-
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
