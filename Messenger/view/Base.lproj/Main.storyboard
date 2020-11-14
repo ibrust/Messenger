@@ -11,35 +11,37 @@
         <!--Login-->
         <scene sceneID="ugi-9M-tXe">
             <objects>
-                <viewController title="Login" id="cul-Wo-2n6" customClass="LoginController" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Login" id="cul-Wo-2n6" customClass="MainLoginController" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4uj-W3-6Ic">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bWo-Kb-dzs">
-                                <rect key="frame" x="107" y="309" width="200" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bWo-Kb-dzs">
+                                <rect key="frame" x="112.5" y="319.5" width="189" height="32"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <segments>
                                     <segment title="Login"/>
                                     <segment title="Registration"/>
                                 </segments>
+                                <connections>
+                                    <action selector="segmented_control_handler:" destination="cul-Wo-2n6" eventType="valueChanged" id="50w-BS-SLP"/>
+                                </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xd7-pV-gdc">
                                 <rect key="frame" x="107" y="360.5" width="200" height="175"/>
                                 <subviews>
+                                    <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WGP-bj-gxP" userLabel="Registration Container">
+                                        <rect key="frame" x="0.0" y="-1" width="200" height="175"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <connections>
+                                            <segue destination="RdN-ur-kcY" kind="embed" id="wgq-uI-PuR"/>
+                                        </connections>
+                                    </containerView>
                                     <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gaY-AJ-et9" userLabel="Login Container">
                                         <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                         <connections>
                                             <segue destination="Ifc-O6-CYp" kind="embed" id="2FS-gf-aA6"/>
-                                        </connections>
-                                    </containerView>
-                                    <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WGP-bj-gxP" userLabel="Registration Container">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                        <connections>
-                                            <segue destination="RdN-ur-kcY" kind="embed" id="wgq-uI-PuR"/>
                                         </connections>
                                     </containerView>
                                 </subviews>
@@ -53,13 +55,15 @@
                         <viewLayoutGuide key="safeArea" id="h1S-kV-fTl"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="bWo-Kb-dzs" firstAttribute="centerX" secondItem="4uj-W3-6Ic" secondAttribute="centerX" id="6vq-m3-21r"/>
+                            <constraint firstItem="xd7-pV-gdc" firstAttribute="top" secondItem="bWo-Kb-dzs" secondAttribute="bottom" constant="10" id="aiA-bs-l7v"/>
                             <constraint firstItem="xd7-pV-gdc" firstAttribute="centerY" secondItem="4uj-W3-6Ic" secondAttribute="centerY" id="g43-Fn-ZgW"/>
                             <constraint firstItem="xd7-pV-gdc" firstAttribute="centerX" secondItem="4uj-W3-6Ic" secondAttribute="centerX" id="uqZ-Hs-DLv"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="email_outlet" destination="zP0-Me-37j" id="TzZ-Fk-Ic3"/>
-                        <outlet property="password_outlet" destination="zHV-aJ-ROi" id="FzU-oN-HXH"/>
+                        <outlet property="login_main_view" destination="gaY-AJ-et9" id="yTW-Do-czj"/>
+                        <outlet property="registration_main_view" destination="WGP-bj-gxP" id="j4u-lW-fDk"/>
                         <segue destination="Ofv-o5-0AR" kind="show" identifier="user_list_segue" id="MOI-AH-UbJ"/>
                     </connections>
                 </viewController>
@@ -101,7 +105,7 @@
         <!--Login Container-->
         <scene sceneID="uPC-tX-1V5">
             <objects>
-                <viewController title="Login Container" id="Ifc-O6-CYp" sceneMemberID="viewController">
+                <viewController title="Login Container" id="Ifc-O6-CYp" customClass="LoginContainer" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="AcN-zJ-Lg4">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -127,12 +131,13 @@
                                             <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="login_button_handler:" destination="cul-Wo-2n6" eventType="touchUpInside" id="MoV-ej-hYF"/>
+                                            <action selector="login_button_handler:" destination="Ifc-O6-CYp" eventType="touchUpInside" id="Crk-zY-6Ge"/>
                                         </connections>
                                     </button>
                                 </subviews>
                             </stackView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="V0M-ZZ-CFM"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="drd-bJ-20N" firstAttribute="top" secondItem="AcN-zJ-Lg4" secondAttribute="top" id="4xj-g9-kbQ"/>
@@ -141,6 +146,11 @@
                             <constraint firstAttribute="trailing" secondItem="drd-bJ-20N" secondAttribute="trailing" id="i8t-w4-9el"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="login_container_view_outlet" destination="AcN-zJ-Lg4" id="RBB-wM-poY"/>
+                        <outlet property="login_outlet" destination="zP0-Me-37j" id="Kb2-DS-qNp"/>
+                        <outlet property="password_outlet" destination="zHV-aJ-ROi" id="eHd-Z6-sxm"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ebd-aU-xBe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -149,16 +159,59 @@
         <!--Registration Container-->
         <scene sceneID="1CU-Up-JRw">
             <objects>
-                <viewController title="Registration Container" id="RdN-ur-kcY" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fMM-dr-4Xw">
+                <viewController title="Registration Container" id="RdN-ur-kcY" customClass="RegistrationContainer" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" hidden="YES" contentMode="scaleToFill" id="fMM-dr-4Xw">
                         <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="7Ds-FV-G5A">
+                                <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="first name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HYw-Gf-1uF">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="last name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5LI-iN-WyB">
+                                        <rect key="frame" x="0.0" y="51.5" width="200" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fas-7f-1Gc">
+                                        <rect key="frame" x="0.0" y="102.5" width="200" height="21.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vna-Vz-joN">
+                                        <rect key="frame" x="0.0" y="154" width="200" height="21"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="register_button_handler:" destination="RdN-ur-kcY" eventType="touchUpInside" id="rwn-ec-kR9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="YCd-2c-CPW"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="YCd-2c-CPW" firstAttribute="trailing" secondItem="7Ds-FV-G5A" secondAttribute="trailing" id="FVq-k5-mMW"/>
+                            <constraint firstItem="YCd-2c-CPW" firstAttribute="bottom" secondItem="7Ds-FV-G5A" secondAttribute="bottom" id="SRv-Hy-unV"/>
+                            <constraint firstItem="7Ds-FV-G5A" firstAttribute="top" secondItem="fMM-dr-4Xw" secondAttribute="top" id="olI-m7-m0x"/>
+                            <constraint firstItem="7Ds-FV-G5A" firstAttribute="leading" secondItem="YCd-2c-CPW" secondAttribute="leading" id="sUk-3I-4Rc"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="email_outlet" destination="fas-7f-1Gc" id="jYu-fu-vZ5"/>
+                        <outlet property="first_name_outlet" destination="HYw-Gf-1uF" id="ReF-m3-wAi"/>
+                        <outlet property="last_name_outlet" destination="5LI-iN-WyB" id="ScH-Bb-4Sq"/>
+                        <outlet property="registration_container_view_outlet" destination="fMM-dr-4Xw" id="UMj-7i-cQu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YqA-dS-oNp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="581" y="839"/>
+            <point key="canvasLocation" x="513" y="839"/>
         </scene>
     </scenes>
     <resources>
