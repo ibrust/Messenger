@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class LoginContainer: UIViewController {
 
@@ -23,8 +24,6 @@ class LoginContainer: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
 

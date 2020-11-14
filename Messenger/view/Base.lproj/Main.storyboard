@@ -168,22 +168,27 @@
                                 <rect key="frame" x="0.0" y="0.0" width="200" height="175"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="first name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HYw-Gf-1uF">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="21.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="11"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="last name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5LI-iN-WyB">
-                                        <rect key="frame" x="0.0" y="51.5" width="200" height="21"/>
+                                        <rect key="frame" x="0.0" y="41" width="200" height="11"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fas-7f-1Gc">
-                                        <rect key="frame" x="0.0" y="102.5" width="200" height="21.5"/>
+                                        <rect key="frame" x="0.0" y="82" width="200" height="11"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IJc-gD-Bhi" userLabel="Password">
+                                        <rect key="frame" x="0.0" y="123" width="200" height="11"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vna-Vz-joN">
-                                        <rect key="frame" x="0.0" y="154" width="200" height="21"/>
+                                        <rect key="frame" x="0.0" y="164" width="200" height="11"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
                                         <connections>
@@ -206,6 +211,7 @@
                         <outlet property="email_outlet" destination="fas-7f-1Gc" id="jYu-fu-vZ5"/>
                         <outlet property="first_name_outlet" destination="HYw-Gf-1uF" id="ReF-m3-wAi"/>
                         <outlet property="last_name_outlet" destination="5LI-iN-WyB" id="ScH-Bb-4Sq"/>
+                        <outlet property="password_outlet" destination="IJc-gD-Bhi" id="fEE-mr-m1k"/>
                         <outlet property="registration_container_view_outlet" destination="fMM-dr-4Xw" id="UMj-7i-cQu"/>
                     </connections>
                 </viewController>
