@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A09FB3E25606B3200279B43 /* DatabaseObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A09FB3D25606B3200279B43 /* DatabaseObjects.swift */; };
+		3A09FB4125607C8D00279B43 /* Custom_Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A09FB4025607C8D00279B43 /* Custom_Cell.swift */; };
+		3A09FB4425607D2500279B43 /* UserListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A09FB4325607D2500279B43 /* UserListController.swift */; };
+		3A09FB472560D13400279B43 /* MessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A09FB462560D13400279B43 /* MessageController.swift */; };
+		3A09FB4A2560D29C00279B43 /* Message_Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A09FB492560D29C00279B43 /* Message_Cell.swift */; };
 		3A1D436C255E04E7009C25FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D436B255E04E7009C25FE /* AppDelegate.swift */; };
 		3A1D436E255E04E7009C25FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D436D255E04E7009C25FE /* SceneDelegate.swift */; };
 		3A1D4370255E04E7009C25FE /* MainLoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D436F255E04E7009C25FE /* MainLoginController.swift */; };
@@ -21,6 +26,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A09FB3D25606B3200279B43 /* DatabaseObjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseObjects.swift; sourceTree = "<group>"; };
+		3A09FB4025607C8D00279B43 /* Custom_Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Custom_Cell.swift; sourceTree = "<group>"; };
+		3A09FB4325607D2500279B43 /* UserListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListController.swift; sourceTree = "<group>"; };
+		3A09FB462560D13400279B43 /* MessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageController.swift; sourceTree = "<group>"; };
+		3A09FB492560D29C00279B43 /* Message_Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message_Cell.swift; sourceTree = "<group>"; };
 		3A1D4368255E04E6009C25FE /* Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A1D436B255E04E7009C25FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A1D436D255E04E7009C25FE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +106,7 @@
 		3A226B1E255F5C02002BDA57 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				3A09FB3D25606B3200279B43 /* DatabaseObjects.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -104,6 +115,8 @@
 			isa = PBXGroup;
 			children = (
 				3A1D4371255E04E7009C25FE /* Main.storyboard */,
+				3A09FB4025607C8D00279B43 /* Custom_Cell.swift */,
+				3A09FB492560D29C00279B43 /* Message_Cell.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -114,6 +127,8 @@
 				3A1D436F255E04E7009C25FE /* MainLoginController.swift */,
 				3A3F1550255F64F5009EA01C /* LoginContainer.swift */,
 				3A3F1553255F650B009EA01C /* RegistrationContainer.swift */,
+				3A09FB4325607D2500279B43 /* UserListController.swift */,
+				3A09FB462560D13400279B43 /* MessageController.swift */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -251,10 +266,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A5E8159255F94BA006836F3 /* utility_functions.swift in Sources */,
+				3A09FB4A2560D29C00279B43 /* Message_Cell.swift in Sources */,
 				3A1D4370255E04E7009C25FE /* MainLoginController.swift in Sources */,
 				3A1D436C255E04E7009C25FE /* AppDelegate.swift in Sources */,
 				3A1D436E255E04E7009C25FE /* SceneDelegate.swift in Sources */,
 				3A3F1551255F64F5009EA01C /* LoginContainer.swift in Sources */,
+				3A09FB3E25606B3200279B43 /* DatabaseObjects.swift in Sources */,
+				3A09FB4425607D2500279B43 /* UserListController.swift in Sources */,
+				3A09FB472560D13400279B43 /* MessageController.swift in Sources */,
+				3A09FB4125607C8D00279B43 /* Custom_Cell.swift in Sources */,
 				3A3F1554255F650B009EA01C /* RegistrationContainer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

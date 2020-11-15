@@ -12,14 +12,11 @@ import FirebaseDatabase
 class RegistrationContainer: UIViewController {
 
     @IBOutlet var registration_container_view_outlet: UIView!
-    
     @IBOutlet weak var first_name_outlet: UITextField!
-    
     @IBOutlet weak var last_name_outlet: UITextField!
-    
     @IBOutlet weak var email_outlet: UITextField!
-    
     @IBOutlet weak var password_outlet: UITextField!
+    
     weak var delegate: MainLoginController? = nil
     
     
@@ -31,8 +28,11 @@ class RegistrationContainer: UIViewController {
         if is_valid_email(email_address) == false{return}
         if is_valid_password(password) == false{return}
         
-        Auth.auth().createUser(withEmail: email_address, password: password) { authResult, error in
-            if let error = error as? NSError {
+        self.delegate?.login_email = email_address
+        
+        Auth.auth().createUser(withEmail: email_address, password: password) { [weak self] authResult, error in
+            guard let self = self else{return}
+            if let error = error as NSError? {
                 switch AuthErrorCode(rawValue: error.code){
                 case .emailAlreadyInUse:
                     break
@@ -44,17 +44,21 @@ class RegistrationContainer: UIViewController {
                     break
                 }
             } else {
-                let new_user_info = Auth.auth().currentUser
-                let stored_email = new_user_info?.email
+                //let new_user_info = Auth.auth().currentUser
                 
-                // put some code to actually create a user database object here 
+                let user_object = User(first_name, last_name, email_address)
+                self.upload_user_object(user_object)
+                
+                // now you need to segue to the user list screen
+                                
+                self.delegate?.performSegue(withIdentifier: "user_list_segue", sender: nil)
                 
             }
         }
-        
-        
-        
-        
+    }
+    
+    func upload_user_object(_ user_struct: User){
+        self.delegate?.database.child("users").child(user_struct.email).setValue(["firstName": user_struct.firstName, "lastName": user_struct.lastName])
     }
     
     
@@ -63,13 +67,4 @@ class RegistrationContainer: UIViewController {
         
     }
     
-
-    /*
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

@@ -11,6 +11,7 @@ import FirebaseDatabase
 class MainLoginController: UIViewController {
 
     let database = Database.database().reference()
+    var login_email: String? = nil
     var login_container: LoginContainer? = nil
     var registration_container: RegistrationContainer? = nil
     
@@ -36,6 +37,7 @@ class MainLoginController: UIViewController {
     }
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -50,6 +52,8 @@ class MainLoginController: UIViewController {
         case let container as RegistrationContainer:
             container.delegate = self
             self.registration_container = container
+        case let container as UserListController:
+            container.login_email = self.login_email
         default:
             break
         }

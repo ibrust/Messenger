@@ -21,12 +21,14 @@ class LoginContainer: UIViewController {
         
         guard let login_email = login_outlet.text else{return}
         guard let password = password_outlet.text else{return}
-        if is_valid_email(login_email) == false{return}
+        if is_valid_email(login_email) == false{return}     // display some sort of error message here
         if is_valid_password(password) == false{return}
+        
+        self.delegate?.login_email = login_email
         
         Auth.auth().signIn(withEmail: login_email, password: password) { (authResult, error) in
             
-            if let error = error as? NSError {
+            if let error = error as NSError? {
                 switch AuthErrorCode(rawValue: error.code){
                 case .operationNotAllowed:  // indicates email/password accounts are not enabled
                     break
@@ -40,8 +42,8 @@ class LoginContainer: UIViewController {
                     break
                 }
             } else {
-                let user_info = Auth.auth().currentUser
-                let logged_in_email = user_info?.email
+                
+                self.delegate?.performSegue(withIdentifier: "user_list_segue", sender: nil)
             }
             
         }
@@ -54,16 +56,5 @@ class LoginContainer: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
