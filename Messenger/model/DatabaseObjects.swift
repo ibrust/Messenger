@@ -39,8 +39,5 @@ func safe_email(_ email: String) -> String {
     return safe_email
 }
 
-/*
-func upload_new_message(message: MessageContainer){
-    database.child("messages").child(message.dateTime).setValue(["userSending": message.userSending, "userReceiving": message.userReceiving, "message": message.message])
-}
-*/
+
+

@@ -6,13 +6,38 @@
 //
 
 import UIKit
+import Firebase
 import FirebaseDatabase
 
 class MessageController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var table_view_reference: UITableView!
-
     @IBOutlet weak var message_input_outlet: UITextField!
+    
+    
+    @IBAction func back_button_handler(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: "return_to_list_segue", sender: nil)
+    }
+    
+    @IBAction func message_send_handler(_ sender: UIButton) {
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss ZZZZZ"
+        let current_date = formatter.string(from: date)
+        
+        database.child("messages").child(current_date).setValue(["userSending": sender_email, "userReceiving": receiver_email, "message": message_input_outlet.text])
+    }
+    
+    @IBAction func logout_handler(_ sender: UIBarButtonItem) {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print("logout error")
+        }
+        performSegue(withIdentifier: "logout_from_message_segue", sender: nil)
+    }
+    
     
     let reuse_id = "message_cell"
     var messages_array: [Message]  = []
@@ -21,12 +46,9 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
     var number_of_rows: Int = 0
     let database = Database.database().reference()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("sender email: ", sender_email, "receiver email: ", receiver_email)
-        
+                
         self.database.child("messages").observe(.value, with: { [weak self] (snapshot) in
             guard let self = self else{return}
             let value = snapshot.value as? [String: Any?]
@@ -40,11 +62,8 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
                 if dict?["userSending"] as? String == self.sender_email && dict?["userReceiving"] as? String == self.receiver_email {
                     
                     guard let message = dict?["message"] as? String else{return}
-                    print("1")
                     guard let sender_email = self.sender_email else{return}
-                    print("2")
                     guard let receiver_email = self.receiver_email else{return}
-                    print("3")
                     
                     let message_obj = Message(key, sender_email, receiver_email, message)
                 
@@ -65,15 +84,12 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuse_id, for: indexPath) as? Message_Cell ?? Message_Cell()
         
-        print("INDEX PATH IS: ", indexPath.row)
         cell.message_label_outlet.text = messages_array[indexPath.row].message
-        
         return cell
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
     }
-
+    
 }

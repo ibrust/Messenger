@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 import FirebaseDatabase
 
 
@@ -18,6 +19,15 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
     
     let database = Database.database().reference()
     
+    @IBAction func logout_handler(_ sender: UIBarButtonItem) {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print("logout error")
+        }
+        performSegue(withIdentifier: "logout_from_list_segue", sender: nil)
+    }
+    
     @IBOutlet weak var table_view_reference: UITableView!
     
     override func viewDidLoad() {
@@ -25,11 +35,11 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
         
         self.database.child("users").observe(.value, with: { [weak self] (snapshot) in
             guard let self = self else{return}
-            let value = snapshot.value as? [String: Any?]
+            guard let response = snapshot.value as? [String: Any?] else{return}
             
             self.users_array = []
             
-            for (key, value) in value! {
+            for (key, value) in response {
                 let dict = value as? [String: Any?]
                 let first_name = dict?["firstName"] as? String ?? "-"
                 let last_name = dict?["lastName"] as? String ?? "-"
@@ -40,7 +50,7 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
                 self.number_of_rows += 1
             }
             
-            self.number_of_rows = value?.count ?? 0
+            self.number_of_rows = response.count ?? 0
             self.table_view_reference.reloadData()
         })
         
@@ -62,7 +72,7 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "messenger_segue", sender: indexPath.row)
     }
-
+//performSegue(withIdentifier: "logout_from_list_segue", sender: indexPath.row)
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let sent_row = sender as? Int ?? 0
@@ -72,7 +82,6 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
         
         message_controller.sender_email = safe_email(self.login_email!)
         message_controller.receiver_email = users_array[index].email
-        
     }
 
 }
