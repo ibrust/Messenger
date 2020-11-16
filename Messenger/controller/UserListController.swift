@@ -72,16 +72,15 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "messenger_segue", sender: indexPath.row)
     }
-//performSegue(withIdentifier: "logout_from_list_segue", sender: indexPath.row)
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let sent_row = sender as? Int ?? 0
         
-        let message_controller = segue.destination as? MessageController ?? MessageController()
+        let message_controller = segue.destination as? MessageController
         guard let index = sender as? Int else{return}
         
-        message_controller.sender_email = safe_email(self.login_email!)
-        message_controller.receiver_email = users_array[index].email
+        // bugged when you come back from detail - the login_email was nil apparently 
+        message_controller?.sender_email = safe_email(self.login_email!)
+        message_controller?.receiver_email = users_array[index].email
     }
 
 }
