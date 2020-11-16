@@ -186,39 +186,58 @@
                                 <rect key="frame" x="0.0" y="88" width="414" height="724"/>
                                 <color key="backgroundColor" red="0.4039215686" green="0.12941176469999999" blue="0.14901960780000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="message_cell" id="OZS-rm-p7N" customClass="Message_Cell" customModule="Messenger" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="24"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="message_cell" rowHeight="65" id="OZS-rm-p7N" customClass="Message_Cell" customModule="Messenger" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="65"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OZS-rm-p7N" id="xE0-fG-dyD">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ASb-HQ-mAS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="24"/>
-                                                    <color key="backgroundColor" red="0.40392156862745099" green="0.12941176470588234" blue="0.14901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="-">
-                                                            <attributes>
-                                                                <color key="NSColor" white="0.9529109589041096" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                <font key="NSFont" size="17" name="Avenir-Book"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="o1B-AB-Qkt">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cqD-UN-ab4" userLabel="Sender">
+                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="32.5"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="-">
+                                                                    <attributes>
+                                                                        <color key="NSColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <font key="NSFont" size="17" name="Avenir-Book"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ASb-HQ-mAS">
+                                                            <rect key="frame" x="0.0" y="32.5" width="414" height="32.5"/>
+                                                            <color key="backgroundColor" red="0.40392156862745099" green="0.12941176470588234" blue="0.14901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="-">
+                                                                    <attributes>
+                                                                        <color key="NSColor" white="0.9529109589041096" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <font key="NSFont" size="17" name="Avenir-Book"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
                                             </subviews>
                                             <color key="backgroundColor" red="0.4039215686" green="0.12941176469999999" blue="0.14901960780000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
-                                                <constraint firstItem="ASb-HQ-mAS" firstAttribute="leading" secondItem="xE0-fG-dyD" secondAttribute="leading" id="ait-9M-aVu"/>
-                                                <constraint firstItem="ASb-HQ-mAS" firstAttribute="top" secondItem="xE0-fG-dyD" secondAttribute="top" id="aj4-em-7wI"/>
-                                                <constraint firstAttribute="bottom" secondItem="ASb-HQ-mAS" secondAttribute="bottom" id="ioM-0T-435"/>
-                                                <constraint firstAttribute="trailing" secondItem="ASb-HQ-mAS" secondAttribute="trailing" id="lmR-rB-EFk"/>
+                                                <constraint firstAttribute="bottom" secondItem="o1B-AB-Qkt" secondAttribute="bottom" id="18o-Vk-Qgi"/>
+                                                <constraint firstItem="o1B-AB-Qkt" firstAttribute="top" secondItem="xE0-fG-dyD" secondAttribute="top" id="NCA-js-Qzx"/>
+                                                <constraint firstItem="o1B-AB-Qkt" firstAttribute="leading" secondItem="xE0-fG-dyD" secondAttribute="leading" id="afR-Kx-5X1"/>
+                                                <constraint firstAttribute="trailing" secondItem="o1B-AB-Qkt" secondAttribute="trailing" id="r06-ry-0ys"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.4039215686" green="0.12941176469999999" blue="0.14901960780000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
                                             <outlet property="message_label_outlet" destination="ASb-HQ-mAS" id="x8N-Xa-PtB"/>
+                                            <outlet property="name_outlet" destination="cqD-UN-ab4" id="ugk-e2-Vtp"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -314,7 +333,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GpB-66-Pvm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3175" y="236"/>
+            <point key="canvasLocation" x="3173.913043478261" y="235.71428571428569"/>
         </scene>
         <!--Login Container-->
         <scene sceneID="uPC-tX-1V5">
@@ -423,7 +442,7 @@
                                                 <fragment content="Submit">
                                                     <attributes>
                                                         <color key="NSColor" red="0.066666666669999999" green="0.066666666669999999" blue="0.066666666669999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        <font key="NSFont" size="16" name=".SFNS-Regular"/>
+                                                        <font key="NSFont" metaFont="system" size="16"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                     </attributes>
                                                 </fragment>

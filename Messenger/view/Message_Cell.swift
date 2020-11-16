@@ -13,6 +13,7 @@ class Message_Cell: UITableViewCell {
     
     @IBOutlet weak var message_label_outlet: UILabel!
     
+    @IBOutlet weak var name_outlet: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
