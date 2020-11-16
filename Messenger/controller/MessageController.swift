@@ -58,8 +58,11 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
                         
             for (key, value) in value! {
                 let dict = value as? [String: Any?]
+                
+                let email1 = dict?["userSending"] as? String
+                let email2 = dict?["userReceiving"] as? String
                                 
-                if dict?["userSending"] as? String == self.sender_email && dict?["userReceiving"] as? String == self.receiver_email {
+                if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email){
                     
                     guard let message = dict?["message"] as? String else{return}
                     guard let sender_email = self.sender_email else{return}
@@ -89,7 +92,12 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        switch segue.destination {
+        case let controller as UserListController:
+            controller.login_email = sender_email
+        default:
+            break
+        }
     }
     
 }
