@@ -356,7 +356,7 @@
                                         <rect key="frame" x="0.0" y="37" width="200" height="32"/>
                                         <color key="backgroundColor" red="0.78823529411764703" green="0.66274509803921566" blue="0.17254901960784313" alpha="1" colorSpace="calibratedRGB"/>
                                         <attributedString key="attributedText"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hh8-Db-e12">
                                         <rect key="frame" x="0.0" y="74" width="200" height="32"/>
@@ -432,7 +432,7 @@
                                         <rect key="frame" x="0.0" y="111" width="200" height="32"/>
                                         <color key="backgroundColor" red="0.78823529410000004" green="0.66274509800000003" blue="0.17254901959999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <attributedString key="attributedText"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vna-Vz-joN">
                                         <rect key="frame" x="0.0" y="148" width="200" height="32"/>
