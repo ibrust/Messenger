@@ -64,7 +64,7 @@ class RegistrationContainer: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        //password_outlet.textContentType = .oneTimeCode
     }
     
 }
