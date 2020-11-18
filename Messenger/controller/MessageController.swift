@@ -56,12 +56,12 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
             for (key, value) in value! {
                 let dict = value as? [String: Any?]
                 
-                guard let email1 = dict?["userSending"] as? String else{return}
-                guard let email2 = dict?["userReceiving"] as? String else{return}
+                guard let email1 = dict?["userSending"] as? String else{continue}
+                guard let email2 = dict?["userReceiving"] as? String else{continue}
                                 
                 if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email) {
                     
-                    guard let message = dict?["message"] as? String else{return}
+                    guard let message = dict?["message"] as? String else{continue}
                     let message_obj = Message(key, email1, email2, message)
                     self.messages_array.append(message_obj)
                     self.number_of_rows += 1
