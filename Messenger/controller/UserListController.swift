@@ -64,23 +64,37 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: reuse_id, for: indexPath) as? Custom_Cell ?? Custom_Cell()
         
         cell.user_email_outlet.text = users_array[indexPath.row].email
-        
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "messenger_segue", sender: indexPath.row)
+        tableView.deselectRow(at: indexPath, animated: true)
+        //performSegue(withIdentifier: "messenger_segue", sender: indexPath.row)
+        performSegue(withIdentifier: "message_kit_segue", sender: indexPath.row)
+
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        /*
         let message_controller = segue.destination as? MessageController
         guard let index = sender as? Int else{return}
         
         // bugged when you come back from detail - the login_email was nil apparently 
         message_controller?.sender_email = safe_email(self.login_email!)
         message_controller?.receiver_email = users_array[index].email
+         */
+        
+        
+        
+        let message_kit_controller = segue.destination as? Message_Kit_Controller
+        guard let index = sender as? Int else {return}
+        message_kit_controller?.sender_email = safe_email(self.login_email!)
+        message_kit_controller?.receiver_email = users_array[index].email
+        
+        
+        
     }
 
 }

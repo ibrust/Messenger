@@ -19,7 +19,7 @@ struct User {
     }
 }
 
-struct Message {
+struct Custom_Message {
     var date: String
     var message: String
     var userReceiving: String

@@ -12,7 +12,7 @@ import FirebaseDatabase
 class MessageController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     let reuse_id = "message_cell"
-    var messages_array: [Message]  = []
+    var messages_array: [Custom_Message]  = []
     var sender_email: String? = nil
     var receiver_email: String? = nil
     var number_of_rows: Int = 0
@@ -28,7 +28,7 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBAction func message_send_handler(_ sender: UIButton) {
         let date = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd hh:mm:ss ZZZZZ"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         let current_date = formatter.string(from: date)
         
         database.child("messages").child(current_date).setValue(["userSending": sender_email, "userReceiving": receiver_email, "message": message_input_outlet.text])
@@ -62,7 +62,7 @@ class MessageController: UIViewController, UITableViewDelegate, UITableViewDataS
                 if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email) {
                     
                     guard let message = dict?["message"] as? String else{continue}
-                    let message_obj = Message(key, email1, email2, message)
+                    let message_obj = Custom_Message(key, email1, email2, message)
                     self.messages_array.append(message_obj)
                     self.number_of_rows += 1
                 }

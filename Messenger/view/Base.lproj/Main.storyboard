@@ -168,6 +168,7 @@
                     <connections>
                         <outlet property="table_view_reference" destination="oKa-xo-PqN" id="Ev2-ka-toH"/>
                         <segue destination="gSf-ZO-lpR" kind="show" identifier="messenger_segue" id="WNH-di-Tpw"/>
+                        <segue destination="sia-Em-cKb" kind="show" identifier="message_kit_segue" id="ZWU-Z3-Ltu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0vf-nB-w1y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -335,6 +336,22 @@
             </objects>
             <point key="canvasLocation" x="3173.913043478261" y="235.71428571428569"/>
         </scene>
+        <!--Message Kit Controller-->
+        <scene sceneID="v7N-xc-697">
+            <objects>
+                <viewController id="sia-Em-cKb" customClass="Message_Kit_Controller" customModule="Messenger" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="QCf-59-QZ5">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="kDP-Mx-bDX"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="NbQ-gH-Xnd"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Aho-jw-gRk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3184" y="994"/>
+        </scene>
         <!--Login Container-->
         <scene sceneID="uPC-tX-1V5">
             <objects>
@@ -482,7 +499,7 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="4Xg-k3-zkF"/>
-        <segue reference="Etf-9A-HMf"/>
+        <segue reference="Aq0-tc-C3i"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
