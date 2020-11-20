@@ -44,13 +44,9 @@ class RegistrationContainer: UIViewController {
                     break
                 }
             } else {
-                //let new_user_info = Auth.auth().currentUser
-                
                 let user_object = User(first_name, last_name, email_address)
                 self.upload_user_object(user_object)
                 
-                // now you need to segue to the user list screen
-                                
                 self.delegate?.performSegue(withIdentifier: "user_list_segue", sender: nil)
                 
             }

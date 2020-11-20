@@ -76,7 +76,27 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
                 
                 DispatchQueue.main.async{
                     self.messagesCollectionView.reloadData()
-                    self.messagesCollectionView.scrollToBottom(animated: true)
+                    
+                    // need to fix the scroll to bottom bug if the section isn't actually at the bottom of the screen yet....? why is that happening?
+                    if self.is_last_message_visible() == false{
+                        self.messagesCollectionView.scrollToBottom(animated: true)
+                    }
+                }
+            })
+            self.database.child("messages").observe(.value, with: { [weak self] (snapshot) in
+                guard let self = self else{return}
+                let value = snapshot.value as? [String: Any?]
+                
+                for (key, value) in value! {
+                    
+                    // you should search for whether the message is unique here...
+                    // use the date to do the search... right?
+                    // if it's unique, add it to the array...
+                    // what if two messages are sent at the same time?
+                    // verify the search? I don't know.
+                    // like you could look for duplicate messages and discard them
+                    // ...? 
+                    
                 }
             })
         }
@@ -171,10 +191,8 @@ extension Message_Kit_Controller {
         inputBar.inputTextView.placeholder = "Sending..."
         
         inputBar.inputTextView.resignFirstResponder()
+        
         DispatchQueue.main.async { [weak self] in
-            inputBar.sendButton.stopAnimating()
-            inputBar.inputTextView.placeholder = "enter text"
-                        
             for component in components {
                 if let input_string = component as? String {
                     
@@ -191,8 +209,12 @@ extension Message_Kit_Controller {
                     self?.messages.append(message_obj)
                 }
             }
+            inputBar.sendButton.stopAnimating()
+            inputBar.inputTextView.placeholder = "enter text"
             self?.messagesCollectionView.reloadDataAndKeepOffset()
-            self?.messagesCollectionView.scrollToBottom(animated: true)
+            if self?.is_last_message_visible() == false {
+                self?.messagesCollectionView.scrollToBottom(animated: true)
+            }
         }
     }
 }
