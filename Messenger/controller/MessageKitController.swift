@@ -22,7 +22,7 @@ struct Message: MessageType {
     var kind: MessageKind
 }
 
-class Message_Kit_Controller : MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+class Message_Kit_Controller : MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate, InputBarAccessoryViewDelegate {
     
     var sender_email: String? = nil
     var receiver_email: String? = nil
@@ -33,31 +33,53 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.messages = []
-        
+        // configure message collection view
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        scrollsToBottomOnKeyboardBeginsEditing = true
         
-        self.database.child("messages").observe(.value, with: { [weak self] (snapshot) in
-            guard let self = self else{return}
-            let value = snapshot.value as? [String: Any?]
-                        
-            for (key, value) in value! {
-                let dict = value as? [String: Any?]
+        messageInputBar.delegate = self
+        messageInputBar.inputTextView.tintColor = .purple
+        messageInputBar.sendButton.setTitleColor(.green, for: .normal)
+        messageInputBar.sendButton.setTitleColor(.red, for: .highlighted)
+        
+        self.messages = []
+        
+        DispatchQueue.global(qos: .userInitiated).async{
+            self.database.child("messages").observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+                guard let self = self else{return}
+                let value = snapshot.value as? [String: Any?]
                 
-                guard let email1 = dict?["userSending"] as? String else{continue}
-                guard let email2 = dict?["userReceiving"] as? String else{continue}
-                                
-                if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email) {
+                for (key, value) in value! {
+                    let dict = value as? [String: Any?]
+                    guard let email1 = dict?["userSending"] as? String else{continue}
+                    guard let email2 = dict?["userReceiving"] as? String else{continue}
                     
-                    guard let message = dict?["message"] as? String else{continue}
-                    let message_obj = Message(sender: Sender(senderId: email1, displayName: email1), messageId: "\(self.messages.count + 1)", sentDate: Date(), kind: .text("\(message)"))
-                    self.messages.append(message_obj)
+                    if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email) {
+                        
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                        let message_date = formatter.date(from: key) ?? Date()
+                        
+                        guard let message = dict?["message"] as? String else{continue}
+                        let message_obj = Message(sender: Sender(senderId: email1, displayName: email1), messageId: "\(self.messages.count + 1)", sentDate: message_date, kind: .text("\(message)"))
+                        self.messages.append(message_obj)
+                    }
                 }
-            }
-            self.messagesCollectionView.reloadData()
-        })
+                
+                self.messages.sort {
+                    $0.sentDate < $1.sentDate
+                }
+                
+                print("MESSAGES: ", self.messages)
+                
+                DispatchQueue.main.async{
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToBottom(animated: true)
+                }
+            })
+        }
     }
     
     func currentSender() -> SenderType {
@@ -113,7 +135,6 @@ extension Message_Kit_Controller {
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         if indexPath.section % 3 == 0 {
             let custom_string = NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
-            print("STRING: ", custom_string)
             return custom_string
         }
         return nil
@@ -124,6 +145,56 @@ extension Message_Kit_Controller {
         print("tapped avatar")
     }
     
+    func is_last_message_visible() -> Bool {
+        guard !messages.isEmpty else {return false}
+        let last_index_path = IndexPath(item: 0, section: messages.count - 1)
+        return messagesCollectionView.indexPathsForVisibleItems.contains(last_index_path)
+    }
+    
+    // input bar accessory delegate functions
+    @objc func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        
+        let text = inputBar.inputTextView.attributedText!
+        let range = NSRange(location: 0, length: text.length)
+        text.enumerateAttribute(.autocompleted, in: range, options: []) { (_, range, _) in
+            
+            let substring = text.attributedSubstring(from: range)
+            let context = substring.attribute(.autocompletedContext, at: 0, effectiveRange: nil)
+            print("autocompleted: ", substring, " with context: ", context ?? [])
+        }
+        
+        let components = inputBar.inputTextView.components
+        inputBar.inputTextView.text = String()
+        inputBar.invalidatePlugins()
+        
+        inputBar.sendButton.startAnimating()
+        inputBar.inputTextView.placeholder = "Sending..."
+        
+        inputBar.inputTextView.resignFirstResponder()
+        DispatchQueue.main.async { [weak self] in
+            inputBar.sendButton.stopAnimating()
+            inputBar.inputTextView.placeholder = "enter text"
+                        
+            for component in components {
+                if let input_string = component as? String {
+                    
+                    let date = Date()
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+                    let current_date = formatter.string(from: date)
+                    
+                    self?.database.child("messages").child(current_date).setValue(["userSending": self?.sender_email, "userReceiving": self?.receiver_email, "message": input_string])
+                    
+                    let sender = Sender(senderId: self?.sender_email ?? "", displayName: self?.sender_email ?? "")
+                    let message_obj = Message(sender: sender, messageId: "\(self?.messages.count ?? 0) + 1)", sentDate: Date(), kind: .text(input_string))
+                    
+                    self?.messages.append(message_obj)
+                }
+            }
+            self?.messagesCollectionView.reloadDataAndKeepOffset()
+            self?.messagesCollectionView.scrollToBottom(animated: true)
+        }
+    }
 }
 
 
