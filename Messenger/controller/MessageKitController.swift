@@ -24,30 +24,39 @@ struct Message: MessageType {
 
 class Message_Kit_Controller : MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate, InputBarAccessoryViewDelegate {
     
+    
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        if isTimeLabelVisible(at: indexPath) {
+            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+        }
+        return nil
+    }
+    
+    
     var sender_email: String? = nil
     var receiver_email: String? = nil
     let database = Database.database().reference()
+    let max_letter_count = 2000
     
     var messages: [MessageType] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // configure message collection view
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messageInputBar.delegate = self
+        
         scrollsToBottomOnKeyboardBeginsEditing = true
         
-        messageInputBar.delegate = self
-        messageInputBar.inputTextView.tintColor = .purple
-        messageInputBar.sendButton.setTitleColor(.green, for: .normal)
-        messageInputBar.sendButton.setTitleColor(.red, for: .highlighted)
-        
+        configure_collection_view()
+        configure_input_bar()
+
         self.messages = []
         
         DispatchQueue.global(qos: .userInitiated).async{
-            self.database.child("messages").observeSingleEvent(of: .value, with: { [weak self] (snapshot) in
+            self.database.child("messages").observe(.value, with: { [weak self] (snapshot) in
                 guard let self = self else{return}
                 let value = snapshot.value as? [String: Any?]
                 
@@ -62,6 +71,17 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
                         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
                         let message_date = formatter.date(from: key) ?? Date()
                         
+                        var duplicate_date = false
+                        for old_message in self.messages {
+                            if message_date == old_message.sentDate {
+                                duplicate_date = true
+                                break
+                            }
+                        }
+                        if duplicate_date == true {
+                            continue
+                        }
+                        
                         guard let message = dict?["message"] as? String else{continue}
                         let message_obj = Message(sender: Sender(senderId: email1, displayName: email1), messageId: "\(self.messages.count + 1)", sentDate: message_date, kind: .text("\(message)"))
                         self.messages.append(message_obj)
@@ -72,31 +92,12 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
                     $0.sentDate < $1.sentDate
                 }
                 
-                print("MESSAGES: ", self.messages)
-                
                 DispatchQueue.main.async{
                     self.messagesCollectionView.reloadData()
                     
-                    // need to fix the scroll to bottom bug if the section isn't actually at the bottom of the screen yet....? why is that happening?
                     if self.is_last_message_visible() == false{
                         self.messagesCollectionView.scrollToBottom(animated: true)
                     }
-                }
-            })
-            self.database.child("messages").observe(.value, with: { [weak self] (snapshot) in
-                guard let self = self else{return}
-                let value = snapshot.value as? [String: Any?]
-                
-                for (key, value) in value! {
-                    
-                    // you should search for whether the message is unique here...
-                    // use the date to do the search... right?
-                    // if it's unique, add it to the array...
-                    // what if two messages are sent at the same time?
-                    // verify the search? I don't know.
-                    // like you could look for duplicate messages and discard them
-                    // ...? 
-                    
                 }
             })
         }
@@ -117,71 +118,40 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
 }
 
 extension Message_Kit_Controller {
-    // adjut the colors for these 3 functions
+    
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? .purple : .yellow
+        return isFromCurrentSender(message: message) ? color_literals[7] : color_literals[6]
     }
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return isFromCurrentSender(message: message) ? .orange : .blue
+        return isFromCurrentSender(message: message) ? color_literals[0] : color_literals[3]
     }
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let avatar = Avatar(image: UIImage(systemName: "star"), initials: "IR")
+        let avatar = Avatar(image: UIImage(systemName: "star"), initials: "")
         avatarView.set(avatar: avatar)
+        avatarView.isHidden = isNextMessageSameSender(at: indexPath)
+        avatarView.layer.borderWidth = 2
+        avatarView.layer.borderColor = color_literals[1].cgColor
     }
     
-    
-    // do these 2 functions support links & other things in the text? not sure, test it later
     func detectorAttributes(for detector: DetectorType, and message: MessageType, at indexPath: IndexPath) -> [NSAttributedString.Key : Any] {
         switch detector{
         case .hashtag, .mention:
-            return [.foregroundColor: UIColor.blue]
+            return [.foregroundColor: color_literals[4]]
         default:
             return MessageLabel.defaultAttributes
         }
     }
     func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
-        return [.url, .address, .phoneNumber, .date, .transitInformation, .mention, .hashtag]
+        return [.url, .address, .date, .transitInformation, .mention, .hashtag]
     }
     
-    
-    // works - but play around with different styles a little bit to see if there's something else that looks cool
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
         let tail: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
-        return .bubbleTail(tail, .curved)
+        return .bubbleTailOutline(color_literals[1], tail, .curved)
     }
     
-    
-    // ?? not working - but not because this function is wrong, something else in the rest of the program is needed to get it working apparently
-    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        if indexPath.section % 3 == 0 {
-            let custom_string = NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
-            return custom_string
-        }
-        return nil
-    }
-    
-    // get something popping up briefly or something like this
-    func didTapAvatar(in cell: MessageCollectionViewCell){
-        print("tapped avatar")
-    }
-    
-    func is_last_message_visible() -> Bool {
-        guard !messages.isEmpty else {return false}
-        let last_index_path = IndexPath(item: 0, section: messages.count - 1)
-        return messagesCollectionView.indexPathsForVisibleItems.contains(last_index_path)
-    }
-    
-    // input bar accessory delegate functions
+    // send message handler
     @objc func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-        
-        let text = inputBar.inputTextView.attributedText!
-        let range = NSRange(location: 0, length: text.length)
-        text.enumerateAttribute(.autocompleted, in: range, options: []) { (_, range, _) in
-            
-            let substring = text.attributedSubstring(from: range)
-            let context = substring.attribute(.autocompletedContext, at: 0, effectiveRange: nil)
-            print("autocompleted: ", substring, " with context: ", context ?? [])
-        }
         
         let components = inputBar.inputTextView.components
         inputBar.inputTextView.text = String()
@@ -202,19 +172,123 @@ extension Message_Kit_Controller {
                     let current_date = formatter.string(from: date)
                     
                     self?.database.child("messages").child(current_date).setValue(["userSending": self?.sender_email, "userReceiving": self?.receiver_email, "message": input_string])
-                    
-                    let sender = Sender(senderId: self?.sender_email ?? "", displayName: self?.sender_email ?? "")
-                    let message_obj = Message(sender: sender, messageId: "\(self?.messages.count ?? 0) + 1)", sentDate: Date(), kind: .text(input_string))
-                    
-                    self?.messages.append(message_obj)
                 }
             }
+            
             inputBar.sendButton.stopAnimating()
-            inputBar.inputTextView.placeholder = "enter text"
+            inputBar.inputTextView.placeholder = ""
             self?.messagesCollectionView.reloadDataAndKeepOffset()
             if self?.is_last_message_visible() == false {
                 self?.messagesCollectionView.scrollToBottom(animated: true)
             }
+        }
+    }
+}
+
+
+// private helper functions
+extension Message_Kit_Controller {
+    private func is_last_message_visible() -> Bool {
+        guard !messages.isEmpty else {return false}
+        let last_index_path = IndexPath(item: 0, section: messages.count - 1)
+        return messagesCollectionView.indexPathsForVisibleItems.contains(last_index_path)
+    }
+    
+    private func isNextMessageSameSender(at indexPath: IndexPath) -> Bool {
+        guard indexPath.section + 1 < messages.count else { return false }
+        return messages[indexPath.section].sender.senderId == messages[indexPath.section + 1].sender.senderId
+    }
+    
+    func isTimeLabelVisible(at indexPath: IndexPath) -> Bool {
+        return indexPath.section % 3 == 0 && !isPreviousMessageSameSender(at: indexPath)
+    }
+    func isPreviousMessageSameSender(at indexPath: IndexPath) -> Bool {
+        guard indexPath.section - 1 >= 0 else { return false }
+        return messages[indexPath.section].sender.senderId == messages[indexPath.section - 1].sender.senderId
+    }
+    
+    private func configure_collection_view(){
+        messagesCollectionView.backgroundColor = color_literals[1]
+        
+        let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
+        layout?.setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)))
+        layout?.setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)))
+        layout?.setMessageOutgoingAvatarSize(CGSize(width: 30, height: 30))
+        layout?.setMessageOutgoingMessagePadding(UIEdgeInsets(top: -17.5, left: 18, bottom: 17.5, right: -18))
+        layout?.setMessageIncomingAccessoryViewSize(CGSize(width: 30, height: 30))
+        layout?.setMessageIncomingAccessoryViewPadding(HorizontalEdgeInsets(left: 0, right: 8))
+        layout?.setMessageIncomingAccessoryViewPosition(.messageBottom)
+        
+        layout?.setMessageIncomingMessageTopLabelAlignment(LabelAlignment(textAlignment: .left, textInsets: UIEdgeInsets(top: 0, left: 18, bottom: 17.5, right: 0)))
+        layout?.setMessageIncomingAvatarSize(CGSize(width: 30, height: 30))
+        layout?.setMessageIncomingMessagePadding(UIEdgeInsets(top: -17.5, left: -18, bottom: 17.5, right: 18))
+        
+        layout?.setMessageIncomingAccessoryViewSize(CGSize(width: 30, height: 30))
+        layout?.setMessageIncomingAccessoryViewPadding(HorizontalEdgeInsets(left: 8, right: 0))
+        layout?.setMessageIncomingAccessoryViewPosition(.messageBottom)
+    }
+    
+    private func configure_input_bar(){
+        messageInputBar.backgroundView.backgroundColor = color_literals[3]
+        messageInputBar.inputTextView.tintColor = color_literals[1]
+        messageInputBar.inputTextView.backgroundColor = color_literals[0]
+        messageInputBar.inputTextView.placeholderLabel.text = ""
+        messageInputBar.inputTextView.textColor = color_literals[7]
+        messageInputBar.inputTextView.layer.borderColor = color_literals[2].cgColor
+        messageInputBar.sendButton.imageView?.backgroundColor = UIColor.white
+        messageInputBar.sendButton.image = UIImage(named:
+            "mailbox")
+        
+        messageInputBar.inputTextView.textContainerInset = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 36)
+        messageInputBar.inputTextView.placeholderLabelInsets = UIEdgeInsets(top: 8, left: 20, bottom: 8, right: 36)
+        messageInputBar.inputTextView.layer.borderWidth = 1.0
+        messageInputBar.inputTextView.layer.cornerRadius = 16.0
+        messageInputBar.inputTextView.layer.masksToBounds = true
+        messageInputBar.inputTextView.scrollIndicatorInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
+        
+        messageInputBar.setRightStackViewWidthConstant(to: 36, animated: false)
+        
+        messageInputBar.sendButton.contentEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        messageInputBar.sendButton.setSize(CGSize(width: 36, height: 36), animated: false)
+        
+        messageInputBar.sendButton.title = nil
+        messageInputBar.sendButton.imageView?.layer.cornerRadius = 16
+        let charCountButton = InputBarButtonItem()
+            .configure {
+                $0.title = "0/\(max_letter_count)"
+                $0.contentHorizontalAlignment = .right
+                $0.setTitleColor(UIColor(white: 0.6, alpha: 1), for: .normal)
+                $0.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: .bold)
+                $0.setSize(CGSize(width: 50, height: 25), animated: false)
+            }.onTextViewDidChange { [weak self] (item, textView) in
+                var isOverLimit = false
+                if let self = self {
+                    item.title = "\(textView.text.count)/\(self.max_letter_count)"
+                    isOverLimit = textView.text.count > self.max_letter_count
+                }
+                item.inputBarAccessoryView?.shouldManageSendButtonEnabledState = !isOverLimit
+                if isOverLimit {
+                    item.inputBarAccessoryView?.sendButton.isEnabled = false
+                }
+                let title_color = isOverLimit ? UIColor.red : color_literals[7]
+                item.setTitleColor(title_color, for: .normal)
+        }
+        let bottomItems = [.flexibleSpace, charCountButton]
+        
+        messageInputBar.padding.bottom = 8
+        messageInputBar.middleContentViewPadding.right = -38
+        messageInputBar.inputTextView.textContainerInset.bottom = 8
+        
+        messageInputBar.setStackViewItems(bottomItems, forStack: .bottom, animated: false)
+        messageInputBar.sendButton
+            .onEnabled { item in
+                UIView.animate(withDuration: 0.3, animations: {
+                    item.imageView?.backgroundColor = color_literals[2]
+                })
+            }.onDisabled { item in
+                UIView.animate(withDuration: 0.3, animations: {
+                    item.imageView?.backgroundColor = UIColor.white
+                })
         }
     }
 }

@@ -90,7 +90,7 @@ class UserListController: UIViewController, UITableViewDelegate, UITableViewData
         
         let message_kit_controller = segue.destination as? Message_Kit_Controller
         guard let index = sender as? Int else {return}
-        message_kit_controller?.sender_email = safe_email(self.login_email!)
+        message_kit_controller?.sender_email = safe_email(self.login_email ?? "mountain@gmail.com")
         message_kit_controller?.receiver_email = users_array[index].email
         
         
