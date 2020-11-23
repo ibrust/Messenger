@@ -23,15 +23,36 @@ struct Message: MessageType {
 }
 
 class Message_Kit_Controller : MessagesViewController, MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate, InputBarAccessoryViewDelegate {
-    
+ 
+    var sender_avatar: UIImage? = nil
+    var receiver_avatar: UIImage? = nil 
     
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         if isTimeLabelVisible(at: indexPath) {
-            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
+            return NSAttributedString(string: MessageKitDateFormatter.shared.string(from: message.sentDate), attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: color_literals[7]])
         }
         return nil
     }
-    
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        if isTimeLabelVisible(at: indexPath) {
+            return 18
+        }
+        return 0
+    }
+    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        if isFromCurrentSender(message: message) {
+            return !isPreviousMessageSameSender(at: indexPath) ? 37.5 : 0
+        } else {
+            return !isPreviousMessageSameSender(at: indexPath) ? 37.5 : 0
+        }
+    }
+    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        if !isPreviousMessageSameSender(at: indexPath) {
+            let name = message.sender.displayName
+            return NSAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1), NSAttributedString.Key.foregroundColor: color_literals[7]])
+        }
+        return nil
+    }
     
     var sender_email: String? = nil
     var receiver_email: String? = nil
@@ -68,12 +89,14 @@ class Message_Kit_Controller : MessagesViewController, MessagesDataSource, Messa
                     if (email1 == self.sender_email && email2 == self.receiver_email) || (email2 == self.sender_email && email1 == self.receiver_email) {
                         
                         let formatter = DateFormatter()
-                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
-                        let message_date = formatter.date(from: key) ?? Date()
+                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss z"
+                        guard let message_date = formatter.date(from: key) else {
+                            continue
+                        }
                         
                         var duplicate_date = false
                         for old_message in self.messages {
-                            if message_date == old_message.sentDate {
+                            if message_date.timeIntervalSince1970 == old_message.sentDate.timeIntervalSince1970 {
                                 duplicate_date = true
                                 break
                             }
@@ -126,7 +149,14 @@ extension Message_Kit_Controller {
         return isFromCurrentSender(message: message) ? color_literals[0] : color_literals[3]
     }
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        let avatar = Avatar(image: UIImage(systemName: "star"), initials: "")
+        
+        var avatar: Avatar
+        if message.sender.senderId == self.sender_email {
+            avatar = Avatar(image: sender_avatar, initials: "")
+        } else {
+            avatar = Avatar(image: receiver_avatar, initials: "")
+        }
+        
         avatarView.set(avatar: avatar)
         avatarView.isHidden = isNextMessageSameSender(at: indexPath)
         avatarView.layer.borderWidth = 2
@@ -199,27 +229,28 @@ extension Message_Kit_Controller {
         return messages[indexPath.section].sender.senderId == messages[indexPath.section + 1].sender.senderId
     }
     
-    func isTimeLabelVisible(at indexPath: IndexPath) -> Bool {
+    private func isTimeLabelVisible(at indexPath: IndexPath) -> Bool {
         return indexPath.section % 3 == 0 && !isPreviousMessageSameSender(at: indexPath)
     }
-    func isPreviousMessageSameSender(at indexPath: IndexPath) -> Bool {
+    private func isPreviousMessageSameSender(at indexPath: IndexPath) -> Bool {
         guard indexPath.section - 1 >= 0 else { return false }
         return messages[indexPath.section].sender.senderId == messages[indexPath.section - 1].sender.senderId
     }
-    
     private func configure_collection_view(){
         messagesCollectionView.backgroundColor = color_literals[1]
         
         let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
-        layout?.setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)))
+        layout?.setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 17.5, right: 18)))
         layout?.setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)))
         layout?.setMessageOutgoingAvatarSize(CGSize(width: 30, height: 30))
         layout?.setMessageOutgoingMessagePadding(UIEdgeInsets(top: -17.5, left: 18, bottom: 17.5, right: -18))
-        layout?.setMessageIncomingAccessoryViewSize(CGSize(width: 30, height: 30))
-        layout?.setMessageIncomingAccessoryViewPadding(HorizontalEdgeInsets(left: 0, right: 8))
-        layout?.setMessageIncomingAccessoryViewPosition(.messageBottom)
+        
+        layout?.setMessageOutgoingAccessoryViewSize(CGSize(width: 30, height: 30))
+        layout?.setMessageOutgoingAccessoryViewPadding(HorizontalEdgeInsets(left: 0, right: 8))
+        layout?.setMessageOutgoingAccessoryViewPosition(.messageBottom)
         
         layout?.setMessageIncomingMessageTopLabelAlignment(LabelAlignment(textAlignment: .left, textInsets: UIEdgeInsets(top: 0, left: 18, bottom: 17.5, right: 0)))
+        layout?.setMessageIncomingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)))
         layout?.setMessageIncomingAvatarSize(CGSize(width: 30, height: 30))
         layout?.setMessageIncomingMessagePadding(UIEdgeInsets(top: -17.5, left: -18, bottom: 17.5, right: 18))
         

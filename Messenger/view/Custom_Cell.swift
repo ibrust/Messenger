@@ -9,17 +9,20 @@ import UIKit
 
 class Custom_Cell: UITableViewCell {
 
+
+    @IBOutlet weak var name_outlet: UILabel!
+    
     @IBOutlet weak var user_email_outlet: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
+    @IBOutlet weak var image_outlet: UIImageView!
+    
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
 }
